@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(appBar: AppBar(centerTitle: true,backgroundColor: Colors.white,title: const Text('Student-Record',style: TextStyle(fontWeight: FontWeight.bold),)),
       floatingActionButton: FloatingActionButton.small(
           child: const Icon(Icons.add),
           onPressed: () {
@@ -51,8 +51,8 @@ class HomePage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditPage(id: id, students: students)));
+                                    builder: (context) => EditPage(
+                                        id: id, students: students)));
                           }),
                       const Gap(5),
                       SlidableAction(
@@ -63,6 +63,9 @@ class HomePage extends StatelessWidget {
                             Provider.of<FireBaseProvider>(context,
                                     listen: false)
                                 .deleteStudent(id);
+                            Provider.of<FireBaseProvider>(context,
+                                    listen: false)
+                                .deleteImage(students.image!);
                           })
                     ]),
                     child: Container(
@@ -77,22 +80,24 @@ class HomePage extends StatelessWidget {
                               color: Colors.white.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(10)),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 20, left: 20),
+                            padding:
+                                const EdgeInsets.only(right: 20, left: 20),
                             child: Row(
                               children: [
                                 Column(
                                   children: [
-                                    Gap(15),
+                                    const Gap(15),
                                     CircleAvatar(
                                         backgroundImage:
                                             NetworkImage(students.image!),
                                         radius: 40),
-                                    Gap(15)
+                                    const Gap(15)
                                   ],
                                 ),
                                 const Gap(40),
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
                                     Text("Name : ${students.name}",
                                         style: const TextStyle(

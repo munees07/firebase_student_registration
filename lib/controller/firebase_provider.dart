@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +17,7 @@ class FireBaseProvider extends ChangeNotifier {
 
   imageAdder(image) async {
     Reference imagefolder = studentService.main.child('images');
-    Reference uploadimage = imagefolder.child("${imagename}.jpg");
+    Reference uploadimage = imagefolder.child("$imagename.jpg");
     try {
       await uploadimage.putFile(image);
       downloadurl = await uploadimage.getDownloadURL();

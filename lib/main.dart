@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MultiProvider(providers: [ChangeNotifierProvider(create: (context) => FireBaseProvider()),ChangeNotifierProvider(create: (context) => ImageProviders())],
-      child: MaterialApp(
+      child: const MaterialApp(
           debugShowCheckedModeBanner: false,
           home: HomePage(),
         ),

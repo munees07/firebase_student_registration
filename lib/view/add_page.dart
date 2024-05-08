@@ -19,6 +19,9 @@ class AddPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
@@ -35,14 +38,14 @@ class AddPage extends StatelessWidget {
                   );
                 },
               ),
-              Gap(10),
+              const Gap(10),
               TextButton(
                   onPressed: () {
                     Provider.of<ImageProviders>(context, listen: false)
                         .getCam(ImageSource.gallery);
                   },
-                  child: Text('Pick a image')),
-              Gap(10),
+                  child: const Text('Pick a image')),
+              const Gap(10),
               textFieldWidget(controller: nameController, text: 'Name'),
               const Gap(10),
               textFieldWidget(controller: ageController, text: 'Age'),
@@ -71,7 +74,10 @@ class AddPage extends StatelessWidget {
     final className = classController.text;
     await provider.imageAdder(File(imageprovider.file!.path));
     final student = StudentModel(
-        name: name, age: int.parse(age), className: className, image: provider.downloadurl);
+        name: name,
+        age: int.parse(age),
+        className: className,
+        image: provider.downloadurl);
     provider.addStudent(student);
   }
 }
