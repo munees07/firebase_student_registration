@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -38,50 +40,62 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 72, 94, 105),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
-          child: Consumer<ImageProviders>(builder: (context, provider, child) {
-            return Column(
-              children: [
-                FutureBuilder<File?>(
-                  future: Future.value(provider.file),
-                  builder: (context, snapshot) {
-                    return CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      radius: 40,
-                      backgroundImage: !isClicked
-                          ? FileImage(File(provider.file!.path))
-                          : NetworkImage(provider.file!.path) as ImageProvider,
-                    );
-                  },
-                ),
-                const Gap(10),
-                TextButton(
-                    onPressed: () {
-                      provider.getCam(ImageSource.gallery);
-                    },
-                    child: const Text('Pick a image')),
-                const Gap(10),
-                textFieldWidget(controller: nameController, text: 'Name'),
-                const Gap(10),
-                textFieldWidget(controller: ageController, text: 'Age'),
-                const Gap(10),
-                textFieldWidget(
-                    controller: classController, text: 'Class Name'),
-                const Gap(20),
-                Center(
-                    child: ElevatedButton(
+      body: Stack(
+        children: [
+          Image.asset(
+              alignment: Alignment.centerLeft,
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.fitHeight,
+              'assets/background.jpg'),
+          SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
+              child:
+                  Consumer<ImageProviders>(builder: (context, provider, child) {
+                return Column(
+                  children: [
+                    FutureBuilder<File?>(
+                      future: Future.value(provider.file),
+                      builder: (context, snapshot) {
+                        return CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 40,
+                          backgroundImage: !isClicked
+                              ? FileImage(provider.file!.path as File)
+                              : NetworkImage(provider.file!.path)
+                                  as ImageProvider,
+                        );
+                      },
+                    ),
+                    const Gap(10),
+                    TextButton(
                         onPressed: () {
-                          editStudentData(context, widget.students.image);
+                          provider.getCam(ImageSource.gallery);
                         },
-                        child: const Text('Submit')))
-              ],
-            );
-          }),
-        ),
+                        child: const Text('Pick a image')),
+                    const Gap(10),
+                    textFieldWidget(controller: nameController, text: 'Name'),
+                    const Gap(10),
+                    textFieldWidget(controller: ageController, text: 'Age'),
+                    const Gap(10),
+                    textFieldWidget(
+                        controller: classController, text: 'Class Name'),
+                    const Gap(20),
+                    Center(
+                        child: ElevatedButton(
+                            onPressed: () {
+                              editStudentData(context, widget.students.image);
+                            },
+                            child: const Text('Submit')))
+                  ],
+                );
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -99,5 +113,20 @@ class _EditPageState extends State<EditPage> {
         className: className,
         image: provider.downloadurl);
     provider.editStudent(widget.id, student);
+    showDialog(
+      context: context,
+      useSafeArea: true,
+      builder: (context) => AlertDialog(
+        content: const Text('Student edited successfully'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text('OK'))
+        ],
+      ),
+    );
   }
 }

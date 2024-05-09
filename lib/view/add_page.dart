@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,48 +22,57 @@ class AddPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 72, 94, 105),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: Future.value(Provider.of<ImageProviders>(context).file),
-                builder: (context, snapshot) {
-                  return CircleAvatar(
-                    radius: 40,
-                    backgroundImage: snapshot.data != null
-                        ? FileImage(snapshot.data!)
-                        : null,
-                  );
-                },
-              ),
-              const Gap(10),
-              TextButton(
-                  onPressed: () {
-                    Provider.of<ImageProviders>(context, listen: false)
-                        .getCam(ImageSource.gallery);
-                  },
-                  child: const Text('Pick a image')),
-              const Gap(10),
-              textFieldWidget(controller: nameController, text: 'Name'),
-              const Gap(10),
-              textFieldWidget(controller: ageController, text: 'Age'),
-              const Gap(10),
-              textFieldWidget(controller: classController, text: 'Class Name'),
-              const Gap(20),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () {
-                      addstudentData(context);
+      body: Stack(
+        children: [Image.asset(
+              alignment: Alignment.centerLeft,
+              height: double.infinity,
+              width: double.infinity,
+              fit: BoxFit.fitHeight,
+              'assets/background.jpg'),
+          SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
+              child: Column(
+                children: [
+                  FutureBuilder(
+                    future: Future.value(Provider.of<ImageProviders>(context).file),
+                    builder: (context, snapshot) {
+                      return CircleAvatar(
+                        radius: 40,
+                        backgroundImage: snapshot.data != null
+                            ? FileImage(snapshot.data!)
+                            : null,
+                      );
                     },
-                    child: const Text('Submit')),
-              )
-            ],
+                  ),
+                  const Gap(10),
+                  TextButton(
+                      onPressed: () {
+                        Provider.of<ImageProviders>(context, listen: false)
+                            .getCam(ImageSource.gallery);
+                      },
+                      child: const Text('Pick a image')),
+                  const Gap(10),
+                  textFieldWidget(controller: nameController, text: 'Name'),
+                  const Gap(10),
+                  textFieldWidget(controller: ageController, text: 'Age'),
+                  const Gap(10),
+                  textFieldWidget(controller: classController, text: 'Class Name'),
+                  const Gap(20),
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          addstudentData(context);
+                        },
+                        child: const Text('Submit')),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -79,5 +90,20 @@ class AddPage extends StatelessWidget {
         className: className,
         image: provider.downloadurl);
     provider.addStudent(student);
+    showDialog(
+      context: context,
+      useSafeArea: true,
+      builder: (context) => AlertDialog(
+        content: const Text('Student added successfully'),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text('OK'))
+        ],
+      ),
+    );
   }
 }
