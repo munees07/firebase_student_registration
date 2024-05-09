@@ -37,7 +37,7 @@ class AddPage extends StatelessWidget {
               child: Column(
                 children: [
                   FutureBuilder(
-                    future: Future.value(Provider.of<ImageProviders>(context).file),
+                    future: Future.value(Provider.of<ImageProviders>(context).pickedImage),
                     builder: (context, snapshot) {
                       return CircleAvatar(
                         radius: 40,
@@ -51,7 +51,7 @@ class AddPage extends StatelessWidget {
                   TextButton(
                       onPressed: () {
                         Provider.of<ImageProviders>(context, listen: false)
-                            .getCam(ImageSource.gallery);
+                            .pickImage(ImageSource.gallery);
                       },
                       child: const Text('Pick a image')),
                   const Gap(10),
@@ -83,7 +83,7 @@ class AddPage extends StatelessWidget {
     final name = nameController.text;
     final age = ageController.text;
     final className = classController.text;
-    await provider.imageAdder(File(imageprovider.file!.path));
+    await provider.imageAdder(File(imageprovider.pickedImage!.path));
     final student = StudentModel(
         name: name,
         age: int.parse(age),

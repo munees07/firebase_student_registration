@@ -31,7 +31,7 @@ class _EditPageState extends State<EditPage> {
     nameController.text = widget.students.name;
     ageController.text = widget.students.age.toString();
     classController.text = widget.students.className;
-    Provider.of<ImageProviders>(context, listen: false).file =
+    Provider.of<ImageProviders>(context, listen: false).pickedImage =
         File(widget.students.image ?? "");
     super.initState();
   }
@@ -58,14 +58,14 @@ class _EditPageState extends State<EditPage> {
                 return Column(
                   children: [
                     FutureBuilder<File?>(
-                      future: Future.value(provider.file),
+                      future: Future.value(provider.pickedImage),
                       builder: (context, snapshot) {
                         return CircleAvatar(
                           backgroundColor: Colors.grey,
                           radius: 40,
                           backgroundImage: !isClicked
-                              ? FileImage(provider.file!.path as File)
-                              : NetworkImage(provider.file!.path)
+                              ? FileImage(provider.pickedImage!.path as File)
+                              : NetworkImage(provider.pickedImage!.path)
                                   as ImageProvider,
                         );
                       },
@@ -73,7 +73,7 @@ class _EditPageState extends State<EditPage> {
                     const Gap(10),
                     TextButton(
                         onPressed: () {
-                          provider.getCam(ImageSource.gallery);
+                          provider.pickImage(ImageSource.gallery);
                         },
                         child: const Text('Pick a image')),
                     const Gap(10),
@@ -106,7 +106,7 @@ class _EditPageState extends State<EditPage> {
     final name = nameController.text;
     final age = ageController.text;
     final className = classController.text;
-    await provider.imageUpdate(imageurl, File(imageProvider.file!.path));
+    await provider.imageUpdate(imageurl, File(imageProvider.pickedImage!.path));
     final student = StudentModel(
         name: name,
         age: int.parse(age),

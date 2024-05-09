@@ -4,11 +4,11 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageProviders extends ChangeNotifier {
 
-  File? file;
+  File? pickedImage;
   ImagePicker image = ImagePicker();
-  Future<void> getCam(ImageSource source) async {
+  Future<void> pickImage(ImageSource source) async {
     var img = await image.pickImage(source: source);
-    file = File(img!.path);
+    pickedImage = File(img!.path);
     notifyListeners();
   }
 }
