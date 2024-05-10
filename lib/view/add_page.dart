@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:student_firebase/controller/firebase_provider.dart';
 import 'package:student_firebase/controller/image_provider.dart';
+import 'package:student_firebase/helpers/snackbar_helper.dart';
 import 'package:student_firebase/helpers/textfield_helper.dart';
 import 'package:student_firebase/model/student_model.dart';
 
@@ -25,7 +26,8 @@ class AddPage extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 72, 94, 105),
       ),
       body: Stack(
-        children: [Image.asset(
+        children: [
+          Image.asset(
               alignment: Alignment.centerLeft,
               height: double.infinity,
               width: double.infinity,
@@ -37,7 +39,8 @@ class AddPage extends StatelessWidget {
               child: Column(
                 children: [
                   FutureBuilder(
-                    future: Future.value(Provider.of<ImageProviders>(context).pickedImage),
+                    future: Future.value(
+                        Provider.of<ImageProviders>(context).pickedImage),
                     builder: (context, snapshot) {
                       return CircleAvatar(
                         radius: 40,
@@ -59,12 +62,14 @@ class AddPage extends StatelessWidget {
                   const Gap(10),
                   textFieldWidget(controller: ageController, text: 'Age'),
                   const Gap(10),
-                  textFieldWidget(controller: classController, text: 'Class Name'),
+                  textFieldWidget(
+                      controller: classController, text: 'Class Name'),
                   const Gap(20),
                   Center(
                     child: ElevatedButton(
-                        onPressed: () {
-                          addstudentData(context);
+                        onPressed: () async {
+                          await addstudentData(context);
+                          Navigator.pop(context);
                         },
                         child: const Text('Submit')),
                   )
@@ -84,26 +89,14 @@ class AddPage extends StatelessWidget {
     final age = ageController.text;
     final className = classController.text;
     await provider.imageAdder(File(imageprovider.pickedImage!.path));
+
     final student = StudentModel(
         name: name,
         age: int.parse(age),
         className: className,
         image: provider.downloadurl);
     provider.addStudent(student);
-    showDialog(
-      context: context,
-      useSafeArea: true,
-      builder: (context) => AlertDialog(
-        content: const Text('Student added successfully'),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text('OK'))
-        ],
-      ),
-    );
+    successMessage(context, message: 'student added successfully');
+    imageprovider.clearPickedImage();
   }
 }

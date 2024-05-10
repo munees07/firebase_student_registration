@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'package:student_firebase/controller/firebase_provider.dart';
+import 'package:student_firebase/helpers/snackbar_helper.dart';
 import 'package:student_firebase/model/student_model.dart';
 import 'package:student_firebase/view/add_page.dart';
 import 'package:student_firebase/view/edit_page.dart';
@@ -83,6 +84,8 @@ class HomePage extends StatelessWidget {
                                 Provider.of<FireBaseProvider>(context,
                                         listen: false)
                                     .deleteImage(students.image);
+                                successMessage(context,
+                                    message: 'deleted successfully');
                               })
                         ]),
                         child: Container(

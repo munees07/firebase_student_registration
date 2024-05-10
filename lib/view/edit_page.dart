@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:student_firebase/controller/firebase_provider.dart';
 import 'package:student_firebase/controller/image_provider.dart';
+import 'package:student_firebase/helpers/snackbar_helper.dart';
 import 'package:student_firebase/helpers/textfield_helper.dart';
 import 'package:student_firebase/model/student_model.dart';
 
@@ -25,12 +26,14 @@ class _EditPageState extends State<EditPage> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController classController = TextEditingController();
   bool isClicked = true;
+  bool isNewImagePicked = false;
 
   @override
   void initState() {
     nameController.text = widget.students.name;
     ageController.text = widget.students.age.toString();
     classController.text = widget.students.className;
+    isNewImagePicked = false;
     Provider.of<ImageProviders>(context, listen: false).pickedImage =
         File(widget.students.image ?? "");
     super.initState();
@@ -60,20 +63,32 @@ class _EditPageState extends State<EditPage> {
                     FutureBuilder<File?>(
                       future: Future.value(provider.pickedImage),
                       builder: (context, snapshot) {
-                        return CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 40,
-                          backgroundImage: !isClicked
-                              ? FileImage(provider.pickedImage!.path as File)
-                              : NetworkImage(provider.pickedImage!.path)
-                                  as ImageProvider,
-                        );
+                        if (isNewImagePicked) {
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 40,
+                            backgroundImage: FileImage(provider.pickedImage!),
+                          );
+                        } else if (widget.students.image != null) {
+                          return CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 40,
+                            backgroundImage:
+                                NetworkImage(widget.students.image!),
+                          );
+                        } else {
+                          return const CircleAvatar(
+                            backgroundColor: Colors.grey,
+                            radius: 40,
+                          );
+                        }
                       },
                     ),
                     const Gap(10),
                     TextButton(
                         onPressed: () {
                           provider.pickImage(ImageSource.gallery);
+                          isNewImagePicked = true;
                         },
                         child: const Text('Pick a image')),
                     const Gap(10),
@@ -86,8 +101,10 @@ class _EditPageState extends State<EditPage> {
                     const Gap(20),
                     Center(
                         child: ElevatedButton(
-                            onPressed: () {
-                              editStudentData(context, widget.students.image);
+                            onPressed: () async {
+                              await editStudentData(
+                                  context, widget.students.image);
+                              Navigator.pop(context);
                             },
                             child: const Text('Submit')))
                   ],
@@ -113,20 +130,6 @@ class _EditPageState extends State<EditPage> {
         className: className,
         image: provider.downloadurl);
     provider.editStudent(widget.id, student);
-    showDialog(
-      context: context,
-      useSafeArea: true,
-      builder: (context) => AlertDialog(
-        content: const Text('Student edited successfully'),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text('OK'))
-        ],
-      ),
-    );
+    successMessage(context, message: 'Details Edited successfully');
   }
 }

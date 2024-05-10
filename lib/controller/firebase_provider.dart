@@ -16,7 +16,7 @@ class FireBaseProvider extends ChangeNotifier {
   }
 
   imageAdder(image) async {
-    Reference imagefolder = studentService.main.child('images');
+    Reference imagefolder = studentService.firebaseStorage.child('images');
     Reference uploadimage = imagefolder.child("$imagename.jpg");
     try {
       await uploadimage.putFile(image);
@@ -42,7 +42,6 @@ class FireBaseProvider extends ChangeNotifier {
     try {
       Reference delete = FirebaseStorage.instance.refFromURL(imageurl);
       await delete.delete();
-      print('image deleted successfully');
     } catch (error) {
       return Exception('image is not deleted $error');
     }

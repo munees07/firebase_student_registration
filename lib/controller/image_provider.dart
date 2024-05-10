@@ -11,4 +11,9 @@ class ImageProviders extends ChangeNotifier {
     pickedImage = File(img!.path);
     notifyListeners();
   }
+  
+  void clearPickedImage() {
+    pickedImage = null;
+    notifyListeners();
+  }
 }

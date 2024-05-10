@@ -5,7 +5,7 @@ import 'package:student_firebase/model/student_model.dart';
 class StudentService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late final CollectionReference<StudentModel> studentRef;
-  Reference main = FirebaseStorage.instance.ref();
+  Reference firebaseStorage = FirebaseStorage.instance.ref();
 
   StudentService() {
     studentRef = firestore
