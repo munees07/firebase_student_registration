@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:student_firebase/helpers/snackbar_helper.dart';
 import 'package:student_firebase/model/student_model.dart';
 import 'package:student_firebase/services/student_services.dart';
 
@@ -15,7 +16,7 @@ class FireBaseProvider extends ChangeNotifier {
     return studentService.studentRef.snapshots();
   }
 
-  imageAdder(image) async {
+  imageAdder(image,BuildContext context) async {
     Reference imagefolder = studentService.firebaseStorage.child('images');
     Reference uploadimage = imagefolder.child("$imagename.jpg");
     try {
@@ -24,26 +25,26 @@ class FireBaseProvider extends ChangeNotifier {
 
       print(downloadurl);
     } catch (error) {
-      return Exception('image cant be added $error');
+      return errorMessage(context,message:  'image cant be added $error');
     }
   }
 
-  imageUpdate(imageurl, updatedimage) async {
+  imageUpdate(imageurl, updatedimage,BuildContext context) async {
     try {
       Reference editpic = FirebaseStorage.instance.refFromURL(imageurl);
       await editpic.putFile(updatedimage);
       downloadurl = await editpic.getDownloadURL();
     } catch (error) {
-      return Exception('image is not updated$error');
+      return errorMessage(context,message:  'image is not updated$error');
     }
   }
 
-  deleteImage(imageurl) async {
+  deleteImage(imageurl,BuildContext context) async {
     try {
       Reference delete = FirebaseStorage.instance.refFromURL(imageurl);
       await delete.delete();
     } catch (error) {
-      return Exception('image is not deleted $error');
+      return errorMessage(context,message:  'image is not deleted $error');
     }
   }
 

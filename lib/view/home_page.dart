@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
                                     .deleteStudent(id);
                                 Provider.of<FireBaseProvider>(context,
                                         listen: false)
-                                    .deleteImage(students.image);
+                                    .deleteImage(students.image,context);
                                 successMessage(context,
                                     message: 'deleted successfully');
                               })

@@ -88,7 +88,7 @@ class AddPage extends StatelessWidget {
     final name = nameController.text;
     final age = ageController.text;
     final className = classController.text;
-    await provider.imageAdder(File(imageprovider.pickedImage!.path));
+    await provider.imageAdder(File(imageprovider.pickedImage!.path),context);
 
     final student = StudentModel(
         name: name,

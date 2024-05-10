@@ -123,7 +123,7 @@ class _EditPageState extends State<EditPage> {
     final name = nameController.text;
     final age = ageController.text;
     final className = classController.text;
-    await provider.imageUpdate(imageurl, File(imageProvider.pickedImage!.path));
+    await provider.imageUpdate(imageurl, File(imageProvider.pickedImage!.path),context);
     final student = StudentModel(
         name: name,
         age: int.parse(age),
